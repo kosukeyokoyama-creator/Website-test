@@ -1,0 +1,27 @@
+# Robots.txt for Minimalist Threads Website
+# Define crawling rules for all search engines
+
+# Allow all bots to crawl the website
+User-agent: *
+Allow: /
+Disallow: 
+
+# Specific rules for Googlebot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Specific rules for Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots (examples)
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Sitemap location
+Sitemap: https://kosukeyokoyama-creator.github.io/Website-test/sitemap.xml
