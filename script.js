@@ -1,3 +1,6 @@
+// Backend API URL
+const API_URL = 'https://website-test-production-23b4.up.railway.app';
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -12,13 +15,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Contact form handling
-document.getElementById('contactForm').addEventListener('submit', function(e) {
+// Contact form handling with Backend Integration
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const message = document.getElementById('message').value;
+    const submitButton = this.querySelector('button[type="submit"]');
     
     // Validate form
     if (!name || !email || !message) {
@@ -33,11 +37,46 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
         return;
     }
     
-    // Show success message
-    alert('Thank you for your message! We will get back to you soon.');
+    // Show loading state
+    const originalText = submitButton.textContent;
+    submitButton.textContent = 'Sending...';
+    submitButton.disabled = true;
     
-    // Reset form
-    this.reset();
+    try {
+        // Send form data to backend
+        const response = await fetch(`${API_URL}/api/contact`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                message: message
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Show success message
+            alert('✅ Thank you for your message! We will get back to you soon.');
+            
+            // Reset form
+            this.reset();
+        } else {
+            // Show error message
+            alert('❌ Error: ' + result.message);
+        }
+        
+    } catch (error) {
+        console.error('Form submission error:', error);
+        alert('❌ Failed to send message. Please try again later.');
+    } finally {
+        // Reset button state
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+    }
 });
 
 // Add to cart button functionality
